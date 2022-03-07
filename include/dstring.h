@@ -31,5 +31,5 @@ string* string_duplicate(string* str);
 char* string_to_cstring(string* str);
 
 // I'm not doing these right now
-//string* string_substring(string* str, uint64_t start, uint64_t length);
+string* string_substring(string* str, uint64_t start, uint64_t length);
 //char string_character_at(string* str, uint64_t index);
