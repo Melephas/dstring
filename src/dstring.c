@@ -89,3 +89,29 @@ char* string_to_cstring(string* str) {
     memcpy(ret, str->characters, str->used_length);
     return ret;
 }
+
+
+string* string_substring(string* str,uint64_t start,uint64_t length)
+{
+	/*there is no checking to make sure the length or offset entered is valid.I assumed, it would be checked before call?.
+	 * I randomly wrote this anyway,you can get rid of it if it doesn't fit with your design.*/
+	if(length>str->used_length || start>str->used_length)
+	{
+		printf("invalid inputs for string_substring function.");
+		exit(EXIT_FAILURE);
+	}
+
+	/*allocate new string and create some static memory of length bytes*/
+	string *sub_string = string_new();
+	char buffer[length];
+
+	/*copy the range of bytes into local buffer with terminating '\0'*/
+	memcpy(buffer,&str->characters[start],length);
+	buffer[length]='\0';
+
+	/*append extracted buffer to sub_string*/
+	string_append_cstring(sub_string,buffer);
+
+	/*return structure*/
+	return sub_string;
+}
