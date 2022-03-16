@@ -1,6 +1,9 @@
 #pragma once
 
 
+#include <stdint.h>
+
+
 /* Represents a dynamically allocated and managed string
  */
 typedef struct dstring_s string;
@@ -30,6 +33,8 @@ string* string_duplicate(string* str);
 // Creates a C string from the string
 char* string_to_cstring(string* str);
 
-// I'm not doing these right now (now completed)
+// Create a new string from a section of the given string
 string* string_substring(string* str, uint64_t start, uint64_t length);
+
+// Get a character from a specified place in a string
 char string_character_at(string* str, uint64_t index);

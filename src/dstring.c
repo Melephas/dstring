@@ -1,4 +1,10 @@
-#include "../include/dstring.h"
+#include "dstring.h"
+
+
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
 
 
 #ifndef STRING_CHUNK_SIZE
@@ -48,7 +54,7 @@ void string_append_char(string* str, char c) {
                     "Failed to reallocate dstring (%s)\n",
                     strerror(errno)
             );
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         str->characters = tmp;
     }
@@ -85,44 +91,36 @@ char* string_to_cstring(string* str) {
 }
 
 
-// returns a sub string from a string
-string* string_substring(string* str,uint64_t start,uint64_t length)
-{
-	/*there is no checking to make sure the length or offset entered is valid.I assumed, it would be checked before call?.
-	 * I randomly wrote this anyway,you can get rid of it if it doesn't fit with your design.*/
-	if(length>str->used_length || start>str->used_length)
-	{
-		printf("invalid inputs for string_substring function.");
+// Create a new string from a section of the given string
+string* string_substring(string* str, uint64_t start, uint64_t length) {
+	if (start > str->used_length || start + length > str->used_length) {
+        fprintf(
+            stderr,
+            "Invalid substring specification\n"
+        );
 		exit(EXIT_FAILURE);
 	}
 
-	/*allocate new string and create some static memory of length bytes*/
 	string *sub_string = string_new();
 	char buffer[length];
 
-	/*copy the range of bytes into local buffer with terminating '\0'*/
-	memcpy(buffer,&str->characters[start],length);
-	buffer[length]='\0';
+	memcpy(buffer, &str->characters[start], length);
+	buffer[length] = '\0';
 
-	/*append extracted buffer to sub_string*/
-	string_append_cstring(sub_string,buffer);
+	string_append_cstring(sub_string, buffer);
 
-	/*return structure*/
 	return sub_string;
 }
 
-/*returns character at given string offset*/
-char string_character_at(string* str,uint64_t index)
-{
-	/*Making sure to stay within boundries and not cause seg fault,seg fault would have the desired affect and thus
-	 * exit the program and make these lines below redundant, however dynamic memory can be very weird, that i thought
-	 * it was a good idea to include, remove if you like or change*/
-	if(index>str->used_length)
-	{
-		printf("Out of bounds!\n");
+// Get a character from a specified place in a string
+char string_character_at(string* str, uint64_t index) {
+	if (index > str->used_length) {
+        fprintf(
+            stderr,
+            "Invalid string index\n"
+        );
 		exit(EXIT_FAILURE);
 	}
 
-	/*return the byte at requested offset*/
-	return(str->characters[index]);	
+	return str->characters[index];
 }
