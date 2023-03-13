@@ -1,4 +1,4 @@
-#include "dstring.h"
+#include "dstring/dstring.h"
 
 
 #include <stdlib.h>
@@ -8,7 +8,7 @@
 
 
 #ifndef STRING_CHUNK_SIZE
-#define STRING_CHUNK_SIZE 10
+    #define STRING_CHUNK_SIZE 10
 #endif
 
 
@@ -49,11 +49,7 @@ void string_append_char(string* str, char c) {
         str->allocated_length += STRING_CHUNK_SIZE;
         char* tmp = realloc(str->characters, str->allocated_length * sizeof(char));
         if (tmp == NULL) {
-            fprintf(
-                    stderr,
-                    "Failed to reallocate dstring (%s)\n",
-                    strerror(errno)
-            );
+            fprintf(stderr, "Failed to reallocate dstring (%s)\n", strerror(errno));
             exit(EXIT_FAILURE);
         }
         str->characters = tmp;
@@ -93,34 +89,29 @@ char* string_to_cstring(string* str) {
 
 // Create a new string from a section of the given string
 string* string_substring(string* str, uint64_t start, uint64_t length) {
-	if (start > str->used_length || start + length > str->used_length) {
-        fprintf(
-            stderr,
-            "Invalid substring specification\n"
-        );
-		exit(EXIT_FAILURE);
-	}
+    if (start > str->used_length || start + length > str->used_length) {
+        fprintf(stderr, "Invalid substring specification\n");
+	exit(EXIT_FAILURE);
+    }
 
-	string *sub_string = string_new();
-	char buffer[length];
+    string *sub_string = string_new();
+    char buffer[length];
 
-	memcpy(buffer, &str->characters[start], length);
-	buffer[length] = '\0';
+    memcpy(buffer, &str->characters[start], length);
+    buffer[length] = '\0';
 
-	string_append_cstring(sub_string, buffer);
+    string_append_cstring(sub_string, buffer);
 
-	return sub_string;
+    return sub_string;
 }
 
 // Get a character from a specified place in a string
 char string_character_at(string* str, uint64_t index) {
-	if (index > str->used_length) {
-        fprintf(
-            stderr,
-            "Invalid string index\n"
-        );
-		exit(EXIT_FAILURE);
-	}
+    if (index > str->used_length) {
+        fprintf(stderr, "Invalid string index\n");
+	exit(EXIT_FAILURE);
+    }
 
-	return str->characters[index];
+    return str->characters[index];
 }
+
